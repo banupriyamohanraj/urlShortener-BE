@@ -103,11 +103,46 @@ router.post("/register", async (req, res) => {
             let hash = await bcrypt.hash(req.body.password, salt)
             req.body.password = hash
             console.log(req.body)
-            await db.collection('logininfo').insertOne(req.body)
+            crypto.randomBytes(32,(err,buffer)=>{
+                if(err){
+                    console.log(err)
+                }else{
+                    const confirmationcode = buffer.toString("hex")
+                    console.log(confirmationcode)
+                    req.body.code = confirmationcode
+                  
+                  db.collection('logininfo').insertOne(req.body)
+            
+            //  db.collection('logininfo').update({ _id:ObjectID(id),resetToken : req.body.resetToken}) 
+            var mailOptions = {
+                from: "nodemailera91@gmail.com",
+                to:  req.body.email,
+                subject: "Email Confirmation",
+                html: `<h2>Hello</h2>
+                <p>Thank you for subscribing. Please confirm your email by clicking on the following link</p>
+                <a href="http://localhost:3000/confirm/${confirmationcode}"> Click here</a>`
+            }
+           
+            transporter.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    console.log(error)
+                } else {
+                    console.log("email sent " + info.response)
+                }
+               
+            })
             res.status(200).json({ message: "user successfully registered" })
+                }
+            })
+           
+        } else{
+            res.send('user already exists')
         }
-        client.close();
-    } catch (error) {
+
+            
+        }
+        // client.close();
+     catch (error) {
         console.log(error)
         res.status(500).json({ message: "Internal server error" })
 
@@ -138,6 +173,26 @@ router.post('/newpassword',async (req,res)=>{
         res.status(500).json({message:"Internal Server error"})
     }
    
+})
+
+router.put('/confirm',async(req,res)=>{
+    try {
+        const confirmationcode = req.body.confirmationcode
+        const status = req.body.status
+
+        let client = await MongoClient.connect(dbURL);
+        let db = await client.db('user');
+    let activation =  await db.collection("logininfo").findOneAndUpdate({code : confirmationcode},{$set :{status : status} })
+    if(activation){
+        res.status(200).json({message:"Email activated"})
+    }else{
+        res.status(401).json({message : "Invalid activation code"})
+    }
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message:"Internal server error"})
+    }
 })
 
 module.exports = router;
