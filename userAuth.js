@@ -67,7 +67,7 @@ router.put("/passwordreset", async (req, res) => {
     }
 })
 
-router.get("/login", async (req, res) => {
+router.post("/login", async (req, res) => {
     try {
         let client = await MongoClient.connect(dbURL);
         let db = await client.db('user');
