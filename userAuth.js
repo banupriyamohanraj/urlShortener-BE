@@ -8,6 +8,7 @@ var jwt = require('jsonwebtoken')
 const crypto = require('crypto');
 
 
+
 const dbURL = process.env.DB_URL || 'mongodb://127.0.0.1:27017'
 
 var transporter = nodemailer.createTransport({
@@ -71,8 +72,8 @@ router.post("/login", async (req, res) => {
     try {
         let client = await MongoClient.connect(dbURL);
         let db = await client.db('user');
-        let data = await db.collection("logininfo").findOne({ email: req.body.email })
-        if (data) {
+        let data = await db.collection("logininfo").findOne({ email: req.body.email})
+        if (data.status == 'Activated') {
             let isValid = await bcrypt.compare(req.body.password, data.password)
             // console.log(isValid)
             if (isValid) {
@@ -82,7 +83,10 @@ router.post("/login", async (req, res) => {
             else {
                 res.status(401).json({ message: "Invalid Credentials" })
             }
-        } else {
+        }else if(data.status == 'pending') {
+            res.status(401).json({message:"This account is not activated yet !! Please check your mail"})
+        }
+        else {
             res.status(404).json({ message: "User not registered" })
         }
         client.close();
@@ -182,7 +186,7 @@ router.put('/confirm',async(req,res)=>{
 
         let client = await MongoClient.connect(dbURL);
         let db = await client.db('user');
-    let activation =  await db.collection("logininfo").findOneAndUpdate({code : confirmationcode},{$set :{status : status} })
+    let activation =  await db.collection("logininfo").findOneAndUpdate({code : confirmationcode},{$set :{status : status,code:undefined} })
     if(activation){
         res.status(200).json({message:"Email activated"})
     }else{
