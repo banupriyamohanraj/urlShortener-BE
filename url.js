@@ -17,7 +17,7 @@ router.post('/createurl',async (req,res)=>{
   
   try {
     let client = await MongoClient.connect(dbURL);
-    let db = await client.db('user');
+    let db = await client.db('url');
     let url = req.body.longurl;
     console.log(url)
     if(validUrl.isUri(url)){
@@ -41,7 +41,7 @@ router.post('/createurl',async (req,res)=>{
 router.get('/list',async(req,res)=>{
    try {
     let client = await MongoClient.connect(dbURL);
-    let db = await client.db('user');
+    let db = await client.db('url');
 let data= await db.collection("url").find().toArray();
 if(data){
     let count = await db.collection('url').count();
@@ -59,7 +59,7 @@ if(data){
 router.get('/:urlid',async(req,res)=>{
     try {
         let client = await MongoClient.connect(dbURL);
-        let db = await client.db('user');
+        let db = await client.db('url');
     await db.collection("url").findOne({shortid : req.params.urlid},function(err,data){
         if(err) throw err;
         res.redirect(data.longurl)
