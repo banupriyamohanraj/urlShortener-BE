@@ -21,15 +21,15 @@ router.post('/createurl',async (req,res)=>{
     let url = req.body.longurl;
     console.log(url)
     if(validUrl.isUri(url)){
-        let baseUrl = "localhost:3000/"
+    
       let short_id = shortid.generate();
-      let shortUrl = baseUrl+short_id;
-      console.log(shortUrl)
-      await db.collection("url").insertOne({longurl : req.body.longurl,shortid: shortUrl});
+     
+      await db.collection("url").insertOne({longurl : req.body.longurl,shortid: short_id});
       res.status('200').json({message:"Looks like URL"})
     }else{
         res.status("401").json({message:"Not an URL"})
     }
+    client.close();
   } catch (error) {
       console.log(error)
       res.status(500).json({message:"Internal server error"})
