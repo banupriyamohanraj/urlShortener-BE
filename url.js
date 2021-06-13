@@ -65,11 +65,11 @@ router.get('/:urlid', async (req, res) => {
         let db = await client.db('url');
         await db.collection("url").findOne({ shortid: req.params.urlid }, function (err, data) {
             if (err) throw err;
-            if (data) {
+           
                 res.redirect(data.longurl)
-            } else {
-                res.status(404).json({ message: "not found" })
-            }
+         
+                // res.status(404).json({ message: "not found" })
+        
 
         })
     } catch (error) {
