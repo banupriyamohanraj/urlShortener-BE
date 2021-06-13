@@ -23,8 +23,8 @@ router.post('/createurl', async (req, res) => {
         if (validUrl.isUri(url)) {
 
             let short_id = shortid.generate();
-            let shorturl = `https://urlshortener--be.herokuapp.com/url/${short_id}`
-            await db.collection("url").insertOne({ longurl: req.body.longurl, shortid: shorturl });
+           
+            await db.collection("url").insertOne({ longurl: req.body.longurl, shortid: short_id });
 
 
             res.status('200').json({ message: "Looks like URL" })
@@ -66,6 +66,7 @@ router.get('/:urlid', async (req, res) => {
         let data = await db.collection("url").findOne({ shortid: req.params.urlid })
             if(data){
                 res.redirect(data.longurl)
+                res.status(200).json({message:"found",data})
             }
             else {
                 res.status(404).json({ message: "not found" })
