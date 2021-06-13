@@ -63,10 +63,12 @@ router.get('/:urlid', async (req, res) => {
     try {
         let client = await MongoClient.connect(dbURL);
         let db = await client.db('url');
-        await db.collection("url").findOne({ shortid: req.params.urlid }, function (err, data) {
+        let data = await db.collection("url").findOne({ shortid: req.params.urlid }, function (err, data) {
             if (err) throw err;
-           
+            if(data){
                 res.redirect(data.longurl)
+            }
+               
          
                 // res.status(404).json({ message: "not found" })
         
