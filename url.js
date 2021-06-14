@@ -23,8 +23,8 @@ router.post('/createurl', async (req, res) => {
         if (validUrl.isUri(url)) {
 
             let short_id = shortid.generate();
-           
-            await db.collection("url").insertOne({ longurl: req.body.longurl, shortid: short_id });
+            let date = 
+            await db.collection("url").insertOne({ longurl: req.body.longurl, shortid: short_id ,date : new Date()});
 
 
             res.status('200').json({ message: "Looks like URL" })
@@ -47,7 +47,7 @@ router.get('/list', async (req, res) => {
         let db = await client.db('url');
         let data = await db.collection("url").find().toArray();
         if (data) {
-            let count = await db.collection('url').count();
+           
             res.status(200).json(data);
         } else {
             res.status(404).json({ message: "data not found" })
@@ -77,6 +77,24 @@ router.get('/:urlid', async (req, res) => {
         res.status(500).json({ message: "Internal server error" })
     }
 
+})
+
+router.get('/dashboard',async (req,res)=>{
+    try {
+        let client = await MongoClient.connect(dbURL);
+        let db = await client.db('url');
+        let data = await db.collection("url").count()
+        if(data){
+            res.status(200).json(data)
+        }else{
+            res.status(404).json({message:"Count not fount"})
+        }
+
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message:"Internal server error"})
+    }
 })
 
 module.exports = router;
