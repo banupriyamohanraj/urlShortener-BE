@@ -30,6 +30,24 @@ router.get('/allurlcount',async(req,res)=>{
     }
 })
 
+router.post('/date/count',async(req,res)=>{
+    try {
+        let client = await MongoClient.connect(dbURL);
+        let db = await client.db('url');
+        let data = await db.collection("url").find({date:{$gte:new Date(req.body.date)}}).toArray();
+        if(data)
+        {
+          
+            res.status(200).json({message:"found the data",data});
+        }else {
+            res.status(404).json({ message: "data not found" })
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message:"Internal server error"})
+    }
+})
+
 router.post('/createurl', async (req, res) => {
 
     try {
