@@ -40,7 +40,7 @@ router.post('/date/count',async(req,res)=>{
           
             res.status(200).json({message:"found the data",data});
         }else {
-            res.status(404).json({ message: "data not found" })
+            res.status(404).json({ message: "Please select a different Date" })
         }
     } catch (error) {
         console.log(error)
