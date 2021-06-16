@@ -34,7 +34,7 @@ router.post('/date/count',async(req,res)=>{
     try {
         let client = await MongoClient.connect(dbURL);
         let db = await client.db('url');
-        let data = await db.collection("url").find({date:{$gte:new Date(req.body.date),$lt:new Date(req.body.date)}}).toArray();
+        let data = await db.collection("url").find({date:{$gte:new Date(req.body.date)}}).toArray();
         if(data)
         {
           
