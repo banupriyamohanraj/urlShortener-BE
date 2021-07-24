@@ -24,6 +24,7 @@ router.get('/allurlcount',async(req,res)=>{
         }else {
             res.status(404).json({ message: "data not found" })
         }
+        client.close();
     } catch (error) {
         console.log(error)
         res.status(500).json({message:"Internal server error"})
@@ -42,6 +43,7 @@ router.post('/date/count',async(req,res)=>{
         }else {
             res.status(404).json({ message: "Please select a different Date" })
         }
+        client.close();
     } catch (error) {
         console.log(error)
         res.status(500).json({message:"Internal server error"})
@@ -87,6 +89,7 @@ router.get('/list', async (req, res) => {
         } else {
             res.status(404).json({ message: "data not found" })
         }
+        client.close();
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: "Internal server error" })
@@ -108,7 +111,7 @@ router.get('/:urlid', async (req, res) => {
             else {
                 res.status(404).json({ message: "not found" })
             }  
-  
+            client.close();
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: "Internal server error" })

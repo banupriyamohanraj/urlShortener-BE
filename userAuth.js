@@ -192,7 +192,7 @@ router.put('/confirm',async(req,res)=>{
     }else{
         res.status(401).json({message : "Invalid activation code"})
     }
-
+    client.close();
     } catch (error) {
         console.log(error)
         res.status(500).json({message:"Internal server error"})
