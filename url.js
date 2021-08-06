@@ -8,6 +8,7 @@ var jwt = require('jsonwebtoken')
 const crypto = require('crypto');
 const validUrl = require('valid-url');
 const shortid = require('shortid');
+const authorize = require('./authorize')
 
 
 const dbURL = process.env.DB_URL || 'mongodb://127.0.0.1:27017'
@@ -78,7 +79,7 @@ router.post('/createurl', async (req, res) => {
 
 })
 
-router.get('/list', async (req, res) => {
+router.get('/list',authorize, async (req, res) => {
     try {
         let client = await MongoClient.connect(dbURL);
         let db = await client.db('url');

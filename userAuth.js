@@ -77,8 +77,8 @@ router.post("/login", async (req, res) => {
             let isValid = await bcrypt.compare(req.body.password, data.password)
             // console.log(isValid)
             if (isValid) {
-                let token = await jwt.sign({user_id:data._id},process.env.JWT_KEY)
-                res.status(200).json({ message: "Login Sucessfull" ,token})
+                let Auth_token = await jwt.sign({user_id:data._id},process.env.JWT_KEY,{ expiresIn: process.env.JWT_EXPIRES_IN})
+                res.status(200).json({ message: "Login Sucessfull" ,Auth_token,data})
             }
             else {
                 res.status(401).json({ message: "Invalid Credentials" })
