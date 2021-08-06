@@ -79,7 +79,7 @@ router.post('/createurl', async (req, res) => {
 
 })
 
-router.get('/list',authorize, async (req, res) => {
+router.get('/list', async (req, res) => {
     try {
         let client = await MongoClient.connect(dbURL);
         let db = await client.db('url');
