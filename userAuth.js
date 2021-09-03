@@ -14,7 +14,7 @@ const dbURL = process.env.DB_URL || 'mongodb://127.0.0.1:27017'
 var transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-        user: "nodemailera91@gmail.com",
+        user: "nodemailera5@gmail.com",
         pass: process.env.NODEMAILER_PASS
     }
 });
