@@ -14,7 +14,7 @@ const dbURL = process.env.DB_URL || 'mongodb://127.0.0.1:27017'
 var transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-        user: "nodemailera5@gmail.com",
+        user: process.env.NODEMAILER_ACC,
         pass: process.env.NODEMAILER_PASS
     }
 });
@@ -39,7 +39,7 @@ router.put("/passwordreset", async (req, res) => {
                  db.collection('logininfo').findOneAndUpdate({ _id:ObjectID(id)},{$set:{token :token}}) 
             //  db.collection('logininfo').update({ _id:ObjectID(id),resetToken : req.body.resetToken}) 
             var mailOptions = {
-                from: "nodemailera5@gmail.com",
+                from: process.env.NODEMAILER_ACC,
                 to:  req.body.email,
                 subject: "Password Reset Link",
                 html: `<h4>To reset your password please click on this <a href="https://urlshortener-fe.netlify.app/resetpassword/${token}">link</a></h4>`
@@ -119,7 +119,7 @@ router.post("/register", async (req, res) => {
             
             //  db.collection('logininfo').update({ _id:ObjectID(id),resetToken : req.body.resetToken}) 
             var mailOptions = {
-                from: "nodemailera5@gmail.com",
+                from: process.env.NODEMAILER_ACC,
                 to:  req.body.email,
                 subject: "Email Confirmation",
                 html: `<h2>Hello</h2>
