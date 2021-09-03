@@ -70,7 +70,7 @@ router.put("/passwordreset", async (req, res) => {
 
 router.post("/login", async (req, res) => {
     try {
-        let client = await MongoClient.connect(dbURL);
+        let client = await MongoClient.connect(dbURL,{useNewUrlParser: true, useUnifiedTopology: true});
         let db = await client.db('user');
         let data = await db.collection("logininfo").findOne({ email: req.body.email})
         if (data.status == 'Activated') {
@@ -99,7 +99,7 @@ router.post("/login", async (req, res) => {
 
 router.post("/register", async (req, res) => {
     try {
-        let client = await MongoClient.connect(dbURL);
+        let client = await MongoClient.connect(dbURL,{useNewUrlParser: true, useUnifiedTopology: true});
         let db = await client.db('user');
         let data = await db.collection("logininfo").findOne({ email: req.body.email, password: req.body.password })
         if (!data) {
